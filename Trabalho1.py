@@ -7,12 +7,10 @@ O  programa  que  você  desenvolverá  irá  receber  como  entrada um arquivo 
 contendo várias strings. A primeira linha do arquivo indica quantas strings estão no arquivo de texto de 
 entrada. As linhas subsequentes contém uma string por linha.  A seguir está um exemplo das linhas que 
 podem existir em um arquivo de testes para o programa que você irá desenvolver: 
-
 3 
 abbaba 
 abababb 
 bbabbaaab 
-
 Neste  exemplo  temos  3  strings  de  entrada.  O  número  de  strings em  cada  arquivo  será 
 representado  por  um  número  inteiro  positivo.  A  resposta  do  seu  programa  deverá  conter  uma, e 
 somente uma linha de saída para cada string. Estas linhas conterão a string de entrada e o resultado 
@@ -26,58 +24,59 @@ devem estar disponíveis tanto no ambiente repl.it quanto no ambiente Github. Ob
 irá  testar  seu  programa  com  os  arquivos  de  testes  que  você  criar  e  com,  no  mínimo  um  arquivo  de 
 testes criado pelo próprio professor
 '''
-
-
-from logging import _FormatStyle
-from operator import truediv
-from pickle import FALSE
-import re
-
-
 def Reconhecedor(texto):
-    caracter = texto[-1]
+    if(texto==""):#acabou a string
+        return True
+    caracter = texto[0]
     if(caracter=='a'):
-        if(Analisador(texto)):#-1 caracter
-            return True
-        return False
+        return Analisador(texto[1:],0)#-1 caracter
+        
     if(caracter=='b'):
-        if(Reconhecedor(texto,0)):#-1
-            return True 
-        return False
+        return Reconhecedor(texto[1:])#-1
+
     if(caracter=='c'):
-        if(Recusador(texto)):#-1
-            return True 
-        return False
-    if(caracter==''):#acabou a string
-        return True 
+        return Recusador(texto[1:])#-1
+            
     #Para caracteres fora do  alfabeto
-    Recusador(texto)
-    return False
+    return Recusador(texto[1:])
         
 
 
 def Analisador(texto,n_b):
-    caracter = texto[-1]
+    if(texto==""):#acabou a string
+        return False 
+    caracter = texto[0]
     if(caracter=='b' and n_b==1):
-        if(Reconhecedor(texto)):
-            return True
-        return False
+        return Reconhecedor(texto[1:])
+    
     if(caracter=='b'):
-        if(Analisador(texto,1)):
-            return True
-        return False 
+        return Analisador(texto[1:],1)
+    
     if(caracter=='a' or caracter=='c'):
-        if(Reconhecedor(texto)):
-            return True 
-        return False 
-    if(caracter==''):#acabou a string
-        return False 
+        return Recusador(texto[1:])
+    
     #Para caracteres fora do  alfabeto
-    Recusador(texto)
-    return False
+    return Recusador(texto[1:])
         
 
 
 def Recusador(texto):
     return False
 
+
+
+
+def LeitordeTXT(file):
+    n_strings = int(file.readline())
+    for x in range(n_strings):
+      text = file.readline().rstrip('\n')
+      if (Reconhecedor(text)):
+        print(text, ": Pertence.",sep="")
+        continue
+      print(text, ": Não Pertence.",sep="")
+
+LeitordeTXT(open("texto1.txt","r"))
+print("=-=-=-=-=-=-=-=-=-=")
+LeitordeTXT(open("texto2.txt","r"))
+print("=-=-=-=-=-=-=-=-=-=")
+LeitordeTXT(open("texto3.txt","r"))
